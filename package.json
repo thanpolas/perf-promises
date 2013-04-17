@@ -1,0 +1,13 @@
+{
+  "name": "perf-promises",
+  "private": true,
+  "description": "Promises performance on multiple chains",
+  "version": "0.0.1",
+  "homepage": "",
+  "dependencies": {
+    "profy": "0.0.2",
+    "when": "~2.0.1",
+    "async": "~0.2.7"
+  },
+  "devDependencies": {}
+}
