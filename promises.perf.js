@@ -85,12 +85,12 @@ var runs = [
   // [when, 10, 'when'],
   // [when, 100, 'when'],
   // [when, 500, 'when'],
-  [when, 1000, 'when']
+  // [when, 1000, 'when']
   // // [Q, 10, 'Q'],
   // // [Q, 100, 'Q'],
   // // [Q, 500, 'Q'],
   // // [Q, 1000, 'Q']
-  // [false, 10, 'async'],
+  [false, 10, 'async']
   // [false, 100, 'async'],
   // [false, 500, 'async'],
   // [false, 1000, 'async']
