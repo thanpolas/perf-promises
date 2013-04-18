@@ -6,7 +6,7 @@
   "homepage": "",
   "dependencies": {
     "profy": "0.0.3",
-    "when": "~2.0.1",
+    "when": "git://github.com/cujojs/when#dev",
     "async": "~0.2.7",
     "q": "~0.9.3",
     "node-promise": "~0.5.6"
