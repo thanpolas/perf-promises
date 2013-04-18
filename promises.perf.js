@@ -26,7 +26,9 @@ function generateCSV(outputcsv) {
   // create header
   var out = 'lib,loops,';
   var memOut = '';
-  for (var i = 1; i < 11; i++) {
+  var totalLogs = runners.totalMasterLoops + 1;
+
+  for (var i = 1; i < totalLogs; i++) {
     out += 'diff' + i + ',';
     memOut += 'mem' + i + ',';
   }
