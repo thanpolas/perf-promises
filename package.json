@@ -5,7 +5,7 @@
   "version": "0.0.1",
   "homepage": "",
   "dependencies": {
-    "profy": "0.0.2",
+    "profy": "0.0.3",
     "when": "~2.0.1",
     "async": "~0.2.7",
     "q": "~0.9.3",

@@ -22,7 +22,7 @@ function run(Prom, loops, PromText) {
   return def.promise;
 }
 
-function generateCSV() {
+function generateCSV(outputcsv) {
   // create header
   var out = 'lib,loops,';
   var memOut = '';
@@ -49,34 +49,57 @@ function generateCSV() {
     out += memOut + '\n';
   });
 
-  fs.writeFileSync('perf.csv', out);
-  console.log('CSV generated "perf.csv"');
+  console.log('outputcsv:', outputcsv);
+
+  var csvFile = 'perf.csv';
+
+  if (outputcsv && outputcsv.length) {
+    csvFile = outputcsv;
+  }
+
+  fs.writeFileSync(csvFile, out);
+  console.log('CSV generated "' + csvFile + '"');
 }
 
-function control(runs) {
+function control(runs, outputcsv) {
   if (0 === runs.length) {
     // the end
     console.log('All Done! generating csv...');
-    generateCSV();
+    generateCSV(outputcsv);
     return;
   }
   setTimeout(function(){
     var params = runs.shift();
     console.log('Starting perf test for: ' + params[2] + ' Loops: ' + params[1]);
-    run(params[0], params[1], params[2]).then(control.bind(null, runs));
+    run(params[0], params[1], params[2]).then(control.bind(null, runs, outputcsv));
   }, 1000);
+
+  // run the GC
+  global.gc();
 }
 
 
 var runs = [
-  [when, 10, 'when'],
-  [when, 100, 'when'],
-  [when, 500, 'when'],
-  [when, 1000, 'when'],
-  [Q, 10, 'Q'],
-  [Q, 100, 'Q'],
-  [Q, 500, 'Q'],
-  [Q, 1000, 'Q']
+  // [when, 10, 'when'],
+  // [when, 100, 'when'],
+  // [when, 500, 'when'],
+  [when, 1000, 'when']
+  // // [Q, 10, 'Q'],
+  // // [Q, 100, 'Q'],
+  // // [Q, 500, 'Q'],
+  // // [Q, 1000, 'Q']
+  // [false, 10, 'async'],
+  // [false, 100, 'async'],
+  // [false, 500, 'async'],
+  // [false, 1000, 'async']
+
 ];
-control(runs);
+
+if (!global.gc) {
+  throw new Error('run node using the --expose-gc option');
+}
+
+var outputcsv = process.argv[2];
+control(runs, outputcsv);
+
 
