@@ -81,6 +81,9 @@ function control(runs, outputcsv) {
   global.gc();
 }
 
+// Long Stack Traces
+// http://documentup.com/kriskowal/q/#tutorial/long-stack-traces
+Q.stackJumpLimit = 0;
 
 var runs = [
   // [require('./packages/when2.0.1/'), 10, 'when-2.0.1'],
@@ -88,7 +91,7 @@ var runs = [
   // [require('./packages/when2.0.1/'), 500, 'when-2.0.1'],
   // [require('./packages/when2.0.1/'), 1000, 'when-2.0.1']
 
-  [require('./packages/when1.8.1/'), 10, 'when-1.8.1']
+  // [require('./packages/when1.8.1/'), 10, 'when-1.8.1']
   // [require('./packages/when1.8.1/'), 100, 'when-1.8.1'],
   // [require('./packages/when1.8.1/'), 500, 'when-1.8.1'],
   // [require('./packages/when1.8.1/'), 1000, 'when-1.8.1']
@@ -99,10 +102,10 @@ var runs = [
   // [when, 500, 'when-2.1.x'],
   // [when, 1000, 'when-2.1.x']
 
-  // [Q, 10, 'Q'],
-  // [Q, 100, 'Q'],
-  // [Q, 500, 'Q'],
-  // [Q, 1000, 'Q']
+  [Q, 10, 'Q'],
+  [Q, 100, 'Q'],
+  [Q, 500, 'Q'],
+  [Q, 1000, 'Q']
 
   // [rsvp, 10, 'rsvp']
 
