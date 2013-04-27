@@ -1,4 +1,8 @@
+// I am sorry for the quality of the code, it was written on the knee
+// to check why kickq was performing poorly and expanded from there on.
+
 var fs = require('fs');
+var util = require('util');
 
 var when   = require('when');
 var Q = require('q');
@@ -6,11 +10,25 @@ var rsvp = require('rsvp');
 
 var runners = require('./lib/runners');
 
+//
+//
+// test parameters
+//
+//
+
+// resolve a promise in the queue asynchronously
+var asyncResolve = false;
+
+// how many tests to perform for each set of loops.
+runners.totalMasterLoops = 20;
+
+
 var allResults = [];
 
-function run(Prom, loops, PromText) {
+function run(Prom, loops, PromText, optAsyncResolve) {
   var def = when.defer();
   runners.run(Prom, loops, function(results){
+    // console.log('RUN DONE: loops, PromText, results :: ', loops, PromText, results);
     allResults.push({
       lib: PromText,
       loops: loops,
@@ -43,11 +61,11 @@ function generateCSV() {
   var out = '';
   var totalLogs = runners.totalMasterLoops + 1;
 
-
   var header = 'loops,';
   var curItem = '';
   // go for all results to fetch libraries
   allResults.forEach(function(item) {
+
     if (curItem !== item.lib) {
       curItem = item.lib;
       header += item.lib + ',';
@@ -68,6 +86,7 @@ function generateCSV() {
   // go for all results and summarize results
   allResults.forEach(function(item) {
     var avgTime = getAvg(item.results, 'diff');
+    var avgTotal = getAvg(item.results, 'totalTime');
     var avgMem = getAvg(item.results, 'mem');
 
     // transform time from ns to ms
@@ -77,7 +96,7 @@ function generateCSV() {
     summary[item.loops].push({
       avgTime: avgTime,
       avgMem: avgMem,
-      totalTime: item.results.totalTime
+      totalTime: avgTotal
     });
   });
 
@@ -119,11 +138,19 @@ function saveFile(outputfile, contents) {
 }
 
 function control(runs, csvFile) {
+
+
   if (0 === runs.length) {
     // the end
-    console.log('All Done! generating csv...');
-    var csvData = generateCSV();
+    console.log('All Done!');
+    var csvData;
+    try{
+      csvData = generateCSV();
+    } catch(ex) {
+      console.log('ex:', ex);
+    }
     if (csvFile && csvFile.length) {
+      console.log('Saving csv to file...');
       saveFile(csvFile, csvData);
       console.log('CSV file saved to: "' + csvFile + '"');
     }
@@ -135,7 +162,8 @@ function control(runs, csvFile) {
   setTimeout(function(){
     var params = runs.shift();
     console.log('Starting perf test for: ' + params[2] + ' Loops: ' + params[1]);
-    run(params[0], params[1], params[2]).then(control.bind(null, runs, csvFile));
+    run(params[0], params[1], params[2]).then(control.bind(null, runs, csvFile),
+      asyncResolve);
   }, 1000);
 
   // run the GC
