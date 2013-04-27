@@ -48,8 +48,8 @@ function generateCSV() {
   var curItem = '';
   // go for all results to fetch libraries
   allResults.forEach(function(item) {
-    if (curItem !== item) {
-      curItem = item;
+    if (curItem !== item.lib) {
+      curItem = item.lib;
       header += item.lib + ',';
     }
   });
@@ -69,6 +69,9 @@ function generateCSV() {
   allResults.forEach(function(item) {
     var avgTime = getAvg(item.results, 'diff');
     var avgMem = getAvg(item.results, 'mem');
+
+    // transform time from ns to ms
+    avgTime = Math.round((avgTime / 1000) * 100) / 100;
 
     summary[item.loops] = summary[item.loops] || [];
     summary[item.loops].push({
@@ -94,7 +97,7 @@ function generateCSV() {
   }
 
   // create the string output for time diffs
-  out += '-- Avg Diffs in microseconds (1.000 == 1ms)\n\n';
+  out += '-- Avg Diffs in milliseconds\n\n';
   out += header;
   out += getFacet('avgTime');
   // create the string output for total time
