@@ -23,58 +23,112 @@ function run(Prom, loops, PromText) {
   return def.promise;
 }
 
-function generateCSV(outputcsv) {
-  // create header
-  var out = 'lib,loops,';
-  var memOut = '';
-  var totalLogs = runners.totalMasterLoops + 1;
-
-  for (var i = 1; i < totalLogs; i++) {
-    out += 'diff' + i + ',';
-    memOut += 'mem' + i + ',';
-  }
-  // remove trailing comma
-  memOut = memOut.substr(0, memOut.length - 1);
-  out += memOut + '\n';
-
-  // go for all results
-  allResults.forEach(function(item) {
-    out += item.lib + ',';
-    out += item.loops + ',';
-    memOut = '';
-    item.results.forEach(function(itemRes){
-      out += itemRes.diff + ',';
-      memOut += itemRes.mem +',';
-    });
-
-    // remove trailing comma
-    memOut = memOut.substr(0, memOut.length - 1);
-    out += memOut + '\n';
-  });
-
-  console.log('outputcsv:', outputcsv);
-
-  var csvFile = 'perf.csv';
-
-  if (outputcsv && outputcsv.length) {
-    csvFile = outputcsv;
-  }
-
-  fs.writeFileSync(csvFile, out);
-  console.log('CSV generated "' + csvFile + '"');
+/**
+ * Remove trailing comma and add a newline
+ * @param  {string} str the string.
+ * @return {string}
+ */
+function nl(str) {
+  str = str.substr(0, str.length - 1);
+  str += '\n';
+  return str;
 }
 
-function control(runs, outputcsv) {
+
+/**
+ * Generates the summary in a csv format.
+ * @return {string} The csv in a string.
+ */
+function generateCSV() {
+  var out = '';
+  var totalLogs = runners.totalMasterLoops + 1;
+
+
+  var header = 'loops,';
+  // go for all results to fetch libraries
+  allResults.forEach(function(item) {
+    header += item.lib + ',';
+  });
+  header = nl(header);
+
+  function getAvg(ar, prop) {
+    var sum = ar.reduce(function(a,b) { return a[prop] || a + b[prop];});
+    var avg = sum / totalLogs;
+    return Math.round(avg * 100) / 100;
+  }
+
+
+  // the main container
+  var summary = Object.create(null);
+
+  // go for all results and summarize results
+  allResults.forEach(function(item) {
+    var avgTime = getAvg(item.results, 'diff');
+    var avgMem = getAvg(item.results, 'mem');
+
+    summary[item.loops] = summary[item.loops] || [];
+    summary[item.loops].push({
+      avgTime: avgTime,
+      avgMem: avgMem,
+      totalTime: item.results.totalTime
+    });
+  });
+
+
+  // return a full block of data for defined prop ('avgTime' or 'avgMem')
+  function getFacet(prop) {
+    var facet = '';
+    for(var loop in summary) {
+      facet += loop + ',';
+      summary[loop].forEach(function(item) {
+        facet += item[prop] + ',';
+      });
+      facet = nl(facet);
+    }
+
+    return facet;
+  }
+
+  // create the string output for time diffs
+  out += '-- Avg Diffs in microseconds (1.000 == 1ms)\n\n';
+  out += header;
+  out += getFacet('avgTime');
+  // create the string output for total time
+  out += '\n';
+  out += '-- Total Time in milliseconds\n\n';
+  out += header;
+  out += getFacet('totalTime');
+  // create the string output for mem diffs
+  out += '\n';
+  out += '-- Avg Mem % from initial - !!! Only reliable when a single test is run\n\n';
+  out += header;
+  out += getFacet('avgMem');
+
+  return out;
+}
+
+function saveFile(outputfile, contents) {
+  fs.writeFileSync(outputfile, contents);
+}
+
+function control(runs, csvFile) {
   if (0 === runs.length) {
     // the end
     console.log('All Done! generating csv...');
-    generateCSV(outputcsv);
+    var csvData = generateCSV();
+    if (csvFile && csvFile.length) {
+      saveFile(csvFile, csvData);
+      console.log('CSV file saved to: "' + csvFile + '"');
+    }
+
+    console.log('\nSummary:');
+    console.log(csvData);
     return;
   }
   setTimeout(function(){
     var params = runs.shift();
     console.log('Starting perf test for: ' + params[2] + ' Loops: ' + params[1]);
-    run(params[0], params[1], params[2]).then(control.bind(null, runs, outputcsv));
+    run(params[0], params[1], params[2]).then(control.bind(null, runs, csvFile));
   }, 1000);
 
   // run the GC
@@ -91,7 +145,7 @@ var runs = [
   // [require('./packages/when2.0.1/'), 500, 'when-2.0.1'],
   // [require('./packages/when2.0.1/'), 1000, 'when-2.0.1']
 
-  // [require('./packages/when1.8.1/'), 10, 'when-1.8.1']
+  // [require('./packages/when1.8.1/'), 10, 'when-1.8.1'],
   // [require('./packages/when1.8.1/'), 100, 'when-1.8.1'],
   // [require('./packages/when1.8.1/'), 500, 'when-1.8.1'],
   // [require('./packages/when1.8.1/'), 1000, 'when-1.8.1']
@@ -102,10 +156,10 @@ var runs = [
   // [when, 500, 'when-2.1.x'],
   // [when, 1000, 'when-2.1.x']
 
-  [Q, 10, 'Q'],
-  [Q, 100, 'Q'],
-  [Q, 500, 'Q'],
-  [Q, 1000, 'Q']
+  [Q, 10, 'Q']
+  // [Q, 100, 'Q'],
+  // [Q, 500, 'Q'],
+  // [Q, 1000, 'Q']
 
   // [rsvp, 10, 'rsvp']
 
@@ -128,6 +182,7 @@ if (!global.gc) {
 }
 
 var outputcsv = process.argv[2];
+
 control(runs, outputcsv);
 
 
