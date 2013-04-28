@@ -17,7 +17,7 @@ var runners = require('./lib/runners');
 //
 
 // resolve a promise in the queue asynchronously
-var asyncResolve = false;
+var asyncResolve = runners.asyncResolve = true;
 
 // how many tests to perform for each set of loops.
 runners.totalMasterLoops = 20;
@@ -36,7 +36,7 @@ function run(Prom, loops, PromText, optAsyncResolve) {
     });
 
     def.resolve();
-  });
+  }, asyncResolve);
 
   return def.promise;
 }
