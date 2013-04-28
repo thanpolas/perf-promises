@@ -10,7 +10,7 @@ var runners = require('./lib/runners');
 //
 
 // resolve a promise in the queue asynchronously
-var asyncResolve = runners.asyncResolve = false;
+var asyncResolve = runners.asyncResolve = true;
 
 // how many tests to perform for each set of loops.
 runners.totalMasterLoops = 20;
@@ -179,38 +179,38 @@ function control(runs, csvFile) {
 Q.stackJumpLimit = 0;
 
 var runs = [
-  [false, 10, 'async'],
-  [false, 100, 'async'],
-  [false, 500, 'async'],
-  [false, 1000, 'async'],
+  // [false, 10, 'async'],
+  // [false, 100, 'async'],
+  // [false, 500, 'async'],
+  // [false, 1000, 'async'],
 
-  [require('./packages/when1.8.1/'), 10, 'when-1.8.1'],
-  [require('./packages/when1.8.1/'), 100, 'when-1.8.1'],
-  [require('./packages/when1.8.1/'), 500, 'when-1.8.1'],
-  [require('./packages/when1.8.1/'), 1000, 'when-1.8.1'],
+  // [require('./packages/when1.8.1/'), 10, 'when-1.8.1'],
+  // [require('./packages/when1.8.1/'), 100, 'when-1.8.1'],
+  [require('./packages/when1.8.1/'), 500, 'when-1.8.1']
+  // [require('./packages/when1.8.1/'), 1000, 'when-1.8.1'],
 
-  [require('./packages/when2.0.1/'), 10, 'when-2.0.1'],
-  [require('./packages/when2.0.1/'), 100, 'when-2.0.1'],
-  [require('./packages/when2.0.1/'), 500, 'when-2.0.1'],
-  [require('./packages/when2.0.1/'), 1000, 'when-2.0.1'],
+  // [require('./packages/when2.0.1/'), 10, 'when-2.0.1'],
+  // [require('./packages/when2.0.1/'), 100, 'when-2.0.1'],
+  // [require('./packages/when2.0.1/'), 500, 'when-2.0.1'],
+  // [require('./packages/when2.0.1/'), 1000, 'when-2.0.1'],
 
-  // The default when is from dev branch 2.1.x
-  [when, 10, 'when-2.1.x'],
-  [when, 100, 'when-2.1.x'],
-  [when, 500, 'when-2.1.x'],
-  [when, 1000, 'when-2.1.x'],
+  // // The default when is from dev branch 2.1.x
+  // [when, 10, 'when-2.1.x'],
+  // [when, 100, 'when-2.1.x'],
+  // [when, 500, 'when-2.1.x'],
+  // [when, 1000, 'when-2.1.x'],
 
-  [Q, 10, 'Q'],
-  [Q, 100, 'Q'],
-  [Q, 500, 'Q'],
-  [Q, 1000, 'Q']
+  // [Q, 10, 'Q'],
+  // [Q, 100, 'Q'],
+  // [Q, 500, 'Q'],
+  // [Q, 1000, 'Q']
 
   // [rsvp, 10, 'rsvp']
 
   // memory single test runs of 500 loops
   // [false, 500, 'mem-async']
-  // [require('./packages/when2.0.1/'), 500, 'mem-when-2.0.1']
   // [require('./packages/when1.8.1/'), 500, 'mem-when-1.8.1']
+  // [require('./packages/when2.0.1/'), 500, 'mem-when-2.0.1']
   // [when, 500, 'mem-when-2.1.x']
   // [Q, 500, 'mem-Q']
 ];
