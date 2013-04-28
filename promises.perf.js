@@ -2,11 +2,11 @@
 // to check why kickq was performing poorly and expanded from there on.
 
 var fs = require('fs');
-var util = require('util');
+// var util = require('util');
 
 var when   = require('when');
 var Q = require('q');
-var rsvp = require('rsvp');
+// var rsvp = require('rsvp');
 
 var runners = require('./lib/runners');
 
@@ -17,7 +17,7 @@ var runners = require('./lib/runners');
 //
 
 // resolve a promise in the queue asynchronously
-var asyncResolve = runners.asyncResolve = true;
+var asyncResolve = runners.asyncResolve = false;
 
 // how many tests to perform for each set of loops.
 runners.totalMasterLoops = 20;
@@ -25,7 +25,7 @@ runners.totalMasterLoops = 20;
 
 var allResults = [];
 
-function run(Prom, loops, PromText, optAsyncResolve) {
+function run(Prom, loops, PromText) {
   var def = when.defer();
   runners.run(Prom, loops, function(results){
     // console.log('RUN DONE: loops, PromText, results :: ', loops, PromText, results);
@@ -59,8 +59,6 @@ function nl(str) {
  */
 function generateCSV() {
   var out = '';
-  var totalLogs = runners.totalMasterLoops + 1;
-
   var header = 'loops,';
   var curItem = '';
   // go for all results to fetch libraries
@@ -75,7 +73,7 @@ function generateCSV() {
 
   function getAvg(ar, prop) {
     var sum = ar.reduce(function(a,b) { return a[prop] || a + b[prop];});
-    var avg = sum / totalLogs;
+    var avg = sum / runners.totalMasterLoops;
     return Math.round(avg * 100) / 100;
   }
 
@@ -175,40 +173,40 @@ function control(runs, csvFile) {
 Q.stackJumpLimit = 0;
 
 var runs = [
-  [false, 10, 'async'],
-  [false, 100, 'async'],
-  [false, 500, 'async'],
-  [false, 1000, 'async'],
+  // [false, 10, 'async'],
+  // [false, 100, 'async'],
+  // [false, 500, 'async'],
+  // [false, 1000, 'async'],
 
-  [require('./packages/when1.8.1/'), 10, 'when-1.8.1'],
-  [require('./packages/when1.8.1/'), 100, 'when-1.8.1'],
-  [require('./packages/when1.8.1/'), 500, 'when-1.8.1'],
-  [require('./packages/when1.8.1/'), 1000, 'when-1.8.1'],
+  // [require('./packages/when1.8.1/'), 10, 'when-1.8.1'],
+  // [require('./packages/when1.8.1/'), 100, 'when-1.8.1'],
+  // [require('./packages/when1.8.1/'), 500, 'when-1.8.1'],
+  // [require('./packages/when1.8.1/'), 1000, 'when-1.8.1'],
 
-  [require('./packages/when2.0.1/'), 10, 'when-2.0.1'],
-  [require('./packages/when2.0.1/'), 100, 'when-2.0.1'],
-  [require('./packages/when2.0.1/'), 500, 'when-2.0.1'],
-  [require('./packages/when2.0.1/'), 1000, 'when-2.0.1'],
+  // [require('./packages/when2.0.1/'), 10, 'when-2.0.1'],
+  // [require('./packages/when2.0.1/'), 100, 'when-2.0.1'],
+  // [require('./packages/when2.0.1/'), 500, 'when-2.0.1'],
+  // [require('./packages/when2.0.1/'), 1000, 'when-2.0.1'],
 
-  // The default when is from dev branch 2.1.x
-  [when, 10, 'when-2.1.x'],
-  [when, 100, 'when-2.1.x'],
-  [when, 500, 'when-2.1.x'],
-  [when, 1000, 'when-2.1.x'],
+  // // The default when is from dev branch 2.1.x
+  // [when, 10, 'when-2.1.x'],
+  // [when, 100, 'when-2.1.x'],
+  // [when, 500, 'when-2.1.x'],
+  // [when, 1000, 'when-2.1.x'],
 
-  [Q, 10, 'Q'],
-  [Q, 100, 'Q'],
-  [Q, 500, 'Q'],
-  [Q, 1000, 'Q']
+  // [Q, 10, 'Q'],
+  // [Q, 100, 'Q'],
+  // [Q, 500, 'Q'],
+  // [Q, 1000, 'Q']
 
   // [rsvp, 10, 'rsvp']
 
-  // memory single test runs of 1k loops
-  // [require('./packages/when2.0.1/'), 1000, 'mem-when-2.0.1']
-  // [require('./packages/when1.8.1/'), 1000, 'mem-when-1.8.1']
-  // [when, 1000, 'mem-when-2.1.x']
-  // [Q, 1000, 'mem-Q']
-  // [false, 1000, 'mem-async']
+  // memory single test runs of 500 loops
+  [false, 500, 'mem-async']
+  // [require('./packages/when2.0.1/'), 500, 'mem-when-2.0.1']
+  // [require('./packages/when1.8.1/'), 500, 'mem-when-1.8.1']
+  // [when, 500, 'mem-when-2.1.x']
+  // [Q, 500, 'mem-Q']
 ];
 
 if (!global.gc) {
