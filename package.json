@@ -5,7 +5,7 @@
   "version": "0.0.1",
   "homepage": "",
   "dependencies": {
-    "profy": "0.0.4",
+    "profy": "0.0.5",
     "when": "git://github.com/cujojs/when#dev",
     "async": "~0.2.7",
     "q": "~0.9.3",

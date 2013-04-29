@@ -186,7 +186,7 @@ var runs = [
 
   // [require('./packages/when1.8.1/'), 10, 'when-1.8.1'],
   // [require('./packages/when1.8.1/'), 100, 'when-1.8.1'],
-  [require('./packages/when1.8.1/'), 500, 'when-1.8.1']
+  // [require('./packages/when1.8.1/'), 500, 'when-1.8.1']
   // [require('./packages/when1.8.1/'), 1000, 'when-1.8.1'],
 
   // [require('./packages/when2.0.1/'), 10, 'when-2.0.1'],
@@ -210,7 +210,7 @@ var runs = [
   // memory single test runs of 500 loops
   // [false, 500, 'mem-async']
   // [require('./packages/when1.8.1/'), 500, 'mem-when-1.8.1']
-  // [require('./packages/when2.0.1/'), 500, 'mem-when-2.0.1']
+  [require('./packages/when2.0.1/'), 500, 'mem-when-2.0.1']
   // [when, 500, 'mem-when-2.1.x']
   // [Q, 500, 'mem-Q']
 ];
