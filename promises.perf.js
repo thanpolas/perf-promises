@@ -176,7 +176,7 @@ function control(runs, csvFile) {
 
 // Long Stack Traces
 // http://documentup.com/kriskowal/q/#tutorial/long-stack-traces
-Q.stackJumpLimit = 0;
+Q.longStackJumpLimit = 0;
 
 var runs = [
   // [false, 10, 'async'],
@@ -210,9 +210,9 @@ var runs = [
   // memory single test runs of 500 loops
   // [false, 500, 'mem-async']
   // [require('./packages/when1.8.1/'), 500, 'mem-when-1.8.1']
-  [require('./packages/when2.0.1/'), 500, 'mem-when-2.0.1']
+  // [require('./packages/when2.0.1/'), 500, 'mem-when-2.0.1']
   // [when, 500, 'mem-when-2.1.x']
-  // [Q, 500, 'mem-Q']
+  [Q, 500, 'mem-Q']
 ];
 
 if (!global.gc) {
