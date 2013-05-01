@@ -10,7 +10,7 @@ var runners = require('./lib/runners');
 //
 
 // resolve a promise in the queue asynchronously
-var asyncResolve = runners.asyncResolve = true;
+var asyncResolve = runners.asyncResolve = false;
 
 // how many tests to perform for each set of loops.
 runners.totalMasterLoops = 20;
@@ -195,10 +195,10 @@ var runs = [
   // [require('./packages/when2.0.1/'), 1000, 'when-2.0.1'],
 
   // // The default when is from dev branch 2.1.x
-  // [when, 10, 'when-2.1.x'],
-  // [when, 100, 'when-2.1.x'],
-  // [when, 500, 'when-2.1.x'],
-  // [when, 1000, 'when-2.1.x'],
+  [when, 10, 'when-2.1.x'],
+  [when, 100, 'when-2.1.x'],
+  [when, 500, 'when-2.1.x'],
+  [when, 1000, 'when-2.1.x']
 
   // [Q, 10, 'Q'],
   // [Q, 100, 'Q'],
@@ -212,7 +212,7 @@ var runs = [
   // [require('./packages/when1.8.1/'), 500, 'mem-when-1.8.1']
   // [require('./packages/when2.0.1/'), 500, 'mem-when-2.0.1']
   // [when, 500, 'mem-when-2.1.x']
-  [Q, 500, 'mem-Q']
+  // [Q, 500, 'mem-Q']
 ];
 
 if (!global.gc) {
