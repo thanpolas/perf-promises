@@ -193,7 +193,7 @@ var runs = [
   // [false, 500, 'async'],
   // [false, 1000, 'async'],
 
-  // [require('./packages/when1.8.1/'), 10, 'when-1.8.1'],
+  // [require('./packages/when1.8.1/'), 10, 'when-1.8.1']
   // [require('./packages/when1.8.1/'), 100, 'when-1.8.1'],
   // [require('./packages/when1.8.1/'), 500, 'when-1.8.1']
   // [require('./packages/when1.8.1/'), 1000, 'when-1.8.1'],
@@ -204,20 +204,20 @@ var runs = [
   // [require('./packages/when2.0.1/'), 1000, 'when-2.0.1'],
 
   // // The default when is from dev branch 2.1.x
-  [when, 10, 'when-2.1.x'],
-  [when, 100, 'when-2.1.x'],
-  [when, 500, 'when-2.1.x'],
-  [when, 1000, 'when-2.1.x'],
+  // [when, 10, 'when-2.1.x'],
+  // [when, 100, 'when-2.1.x'],
+  // [when, 500, 'when-2.1.x'],
+  // [when, 1000, 'when-2.1.x'],
 
-  [Q, 10, 'Q'],
-  [Q, 100, 'Q'],
-  [Q, 500, 'Q'],
-  [Q, 1000, 'Q'],
+  // [Q, 10, 'Q'],
+  // [Q, 100, 'Q'],
+  // [Q, 500, 'Q'],
+  // [Q, 1000, 'Q'],
 
-  [deferred, 10, 'deferred-0.6.3', deferred],
-  [deferred, 100, 'deferred-0.6.3', deferred],
-  [deferred, 500, 'deferred-0.6.3', deferred],
-  [deferred, 1000, 'deferred-0.6.3', deferred]
+  // [deferred, 10, 'deferred-0.6.3', deferred],
+  // [deferred, 100, 'deferred-0.6.3', deferred],
+  // [deferred, 500, 'deferred-0.6.3', deferred],
+  // [deferred, 1000, 'deferred-0.6.3', deferred]
 
 
   // [rsvp, 10, 'rsvp']
@@ -227,7 +227,8 @@ var runs = [
   // [require('./packages/when1.8.1/'), 500, 'mem-when-1.8.1']
   // [require('./packages/when2.0.1/'), 500, 'mem-when-2.0.1']
   // [when, 500, 'mem-when-2.1.x']
-  // [Q, 500, 'mem-Q']
+  // [Q, 500, 'mem-Q'],
+  [deferred, 500, 'mem-deferred-0.6.3', deferred]
 ];
 
 if (!global.gc) {
