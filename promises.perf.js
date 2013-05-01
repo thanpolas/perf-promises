@@ -25,15 +25,15 @@ var fs = require('fs');
 var when   = require('when');
 var Q = require('q');
 // var rsvp = require('rsvp');
-
+var deferred = require('deferred');
 
 
 
 var allResults = [];
 
-function run(Prom, loops, PromText) {
+function run(Prom, Defer, loops, PromText) {
   var def = when.defer();
-  runners.run(Prom, loops, function(results){
+  runners.run(Prom, Defer, loops, function(results){
     // console.log('RUN DONE: loops, PromText, results :: ', loops, PromText, results);
     allResults.push({
       lib: PromText,
@@ -166,7 +166,8 @@ function control(runs, csvFile) {
   setTimeout(function(){
     var params = runs.shift();
     console.log('Starting perf test for: ' + params[2] + ' Loops: ' + params[1]);
-    run(params[0], params[1], params[2]).then(control.bind(null, runs, csvFile),
+    run(params[0], params[1], params[2], params[3] || params[0].defer)
+      .then(control.bind(null, runs, csvFile),
       asyncResolve);
   }, 1000);
 
@@ -195,15 +196,21 @@ var runs = [
   // [require('./packages/when2.0.1/'), 1000, 'when-2.0.1'],
 
   // // The default when is from dev branch 2.1.x
-  [when, 10, 'when-2.1.x'],
-  [when, 100, 'when-2.1.x'],
-  [when, 500, 'when-2.1.x'],
-  [when, 1000, 'when-2.1.x']
+  // [when, 10, 'when-2.1.x'],
+  // [when, 100, 'when-2.1.x'],
+  // [when, 500, 'when-2.1.x'],
+  // [when, 1000, 'when-2.1.x']
 
   // [Q, 10, 'Q'],
   // [Q, 100, 'Q'],
   // [Q, 500, 'Q'],
   // [Q, 1000, 'Q']
+
+  [deferred, 10, 'deferred-0.6.3', deferred],
+  [deferred, 100, 'deferred-0.6.3', deferred],
+  [deferred, 500, 'deferred-0.6.3', deferred],
+  [deferred, 1000, 'deferred-0.6.3', deferred]
+
 
   // [rsvp, 10, 'rsvp']
 
