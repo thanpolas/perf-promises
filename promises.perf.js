@@ -23,18 +23,18 @@ var when   = require('when');
 var Q = require('q');
 // var rsvp = require('rsvp');
 var deferred = require('deferred');
-
+var Promise = require('promise');
 
 
 var allResults = [];
 
-function run(Prom, Defer, loops, PromText, testType) {
+function run(Prom, Defer, loops, promText, testType) {
   var def = when.defer();
   try {
-    runners.run(Prom, Defer, loops, testType, function(results){
-      // console.log('RUN DONE: loops, PromText, results :: ', loops, PromText, results);
+    runners.run(Prom, Defer, loops, testType, promText, function(results){
+      // console.log('RUN DONE: loops, promText, results :: ', loops, promText, results);
       allResults.push({
-        lib: PromText,
+        lib: promText,
         loops: loops,
         results: results
       });
@@ -201,20 +201,22 @@ var runs = [
   // [require('./packages/when2.0.1/'), 1000, 'when-2.0.1', testType],
 
   // // The default when is from dev branch 2.1.x
-  // [when, 10, 'when-2.1.x', testType],
-  // [when, 100, 'when-2.1.x', testType],
-  // [when, 500, 'when-2.1.x', testType],
-  // [when, 1000, 'when-2.1.x', testType],
+  // [when, 10, 'when-2.1.0', testType],
+  // [when, 100, 'when-2.1.0', testType],
+  // [when, 500, 'when-2.1.0', testType],
+  // [when, 1000, 'when-2.1.0', testType],
 
-  // [Q, 10, 'Q', testType],
-  // [Q, 100, 'Q', testType],
-  // [Q, 500, 'Q', testType],
-  // [Q, 1000, 'Q', testType],
+  // [Q, 10, 'Q-0.9.5', testType],
+  // [Q, 100, 'Q-0.9.5', testType],
+  // [Q, 500, 'Q-0.9.5', testType],
+  // [Q, 1000, 'Q-0.9.5', testType],
 
   // [deferred, 10, 'deferred-0.6.3', testType, deferred ],
   // [deferred, 100, 'deferred-0.6.3', testType, deferred ],
   // [deferred, 500, 'deferred-0.6.3', testType, deferred],
-  // [deferred, 1000, 'deferred-0.6.3', testType, deferred]
+  // [deferred, 1000, 'deferred-0.6.3', testType, deferred],
+  //
+  [Promise, 500, 'Promise-3.0.1', testType, Promise]
 
 
   // [rsvp, 10, 'rsvp']
