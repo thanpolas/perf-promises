@@ -1,5 +1,8 @@
 /**
  * @fileOverview Open webserver for promises perf test.
+ *
+ * -- Not conclusive, too much noise --
+ *
  */
 
 var express = require('express');

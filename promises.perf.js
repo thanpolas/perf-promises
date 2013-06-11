@@ -2,15 +2,12 @@
 // to check why kickq was performing poorly and expanded from there on.
 
 var runners = require('./lib/runners');
-
+var TestType = require('./lib/testType');
 //
 //
 // test parameters
 //
 //
-
-// resolve a promise in the queue asynchronously
-var asyncResolve = runners.asyncResolve = false;
 
 // how many tests to perform for each set of loops.
 runners.totalMasterLoops = 20;
@@ -31,10 +28,10 @@ var deferred = require('deferred');
 
 var allResults = [];
 
-function run(Prom, Defer, loops, PromText) {
+function run(Prom, Defer, loops, PromText, testType) {
   var def = when.defer();
   try {
-    runners.run(Prom, Defer, loops, function(results){
+    runners.run(Prom, Defer, loops, testType, function(results){
       // console.log('RUN DONE: loops, PromText, results :: ', loops, PromText, results);
       allResults.push({
         lib: PromText,
@@ -43,7 +40,7 @@ function run(Prom, Defer, loops, PromText) {
       });
 
       def.resolve();
-    }, asyncResolve);
+    });
   } catch(ex) {
     def.reject(ex);
     console.log('run error:', ex);
@@ -90,15 +87,12 @@ function generateCSV() {
 
   // the main container
   var summary = Object.create(null);
-
-  // go for all results and summarize results
+  // go for all results and summarize them
   allResults.forEach(function(item) {
+
     var avgTime = getAvg(item.results, 'diff');
     var avgTotal = getAvg(item.results, 'totalTime');
     var avgMem = getAvg(item.results, 'mem');
-
-    // transform time from ns to ms
-    avgTime = Math.round((avgTime / 1000) * 100) / 100;
 
     summary[item.loops] = summary[item.loops] || [];
     summary[item.loops].push({
@@ -124,17 +118,17 @@ function generateCSV() {
   }
 
   // create the string output for time diffs
-  out += '-- Avg Diffs in milliseconds\n\n';
+  out += '-- Avg Diffs in milliseconds\n';
   out += header;
   out += getFacet('avgTime');
   // create the string output for total time
   out += '\n';
-  out += '-- Total Time in milliseconds\n\n';
+  out += '-- Total Time in milliseconds\n';
   out += header;
   out += getFacet('totalTime');
   // create the string output for mem diffs
   out += '\n';
-  out += '-- Avg Mem % from initial - !!! Only reliable when a single test is run\n\n';
+  out += '-- Avg Mem % from initial - !!! Only reliable when a single test is run\n';
   out += header;
   out += getFacet('avgMem');
 
@@ -170,10 +164,10 @@ function control(runs, csvFile) {
   setTimeout(function(){
     var params = runs.shift();
 
-    console.log('Starting perf test for: ' + params[2] + ' Loops: ' + params[1]);
+    console.log('\n\nStarting perf test for: ' + params[2] + ' Loops: ' + params[1]);
 
-    run(params[0], params[3] || params[0].defer, params[1], params[2])
-      .then(control.bind(null, runs, csvFile, asyncResolve), console.log);
+    run(params[0], params[4] || params[0].defer, params[1], params[2], params[3])
+      .then(control.bind(null, runs, csvFile), console.log);
   }, 1000);
 
   // run the GC
@@ -187,37 +181,40 @@ Q.longStackJumpLimit = 0;
 // hack deferred lib
 deferred.all = deferred.map;
 
+// Define the way stub funcs will resolve: SYNC, MIXED, ASYNC
+var testType = TestType.ASYNC;
+
 var runs = [
-  // [false, 10, 'async'],
-  // [false, 100, 'async'],
-  [false, 500, 'async'],
-  // [false, 1000, 'async'],
+  // [false, 10, 'async', testType],
+  // [false, 100, 'async', testType],
+  [false, 500, 'async', testType],
+  // [false, 1000, 'async', testType],
 
-  // [require('./packages/when1.8.1/'), 10, 'when-1.8.1']
-  // [require('./packages/when1.8.1/'), 100, 'when-1.8.1'],
-  [require('./packages/when1.8.1/'), 500, 'when-1.8.1'],
-  // [require('./packages/when1.8.1/'), 1000, 'when-1.8.1'],
+  // [require('./packages/when1.8.1/'), 10, 'when-1.8.1', testType],
+  // [require('./packages/when1.8.1/'), 100, 'when-1.8.1', testType],
+  [require('./packages/when1.8.1/'), 500, 'when-1.8.1', testType],
+  // [require('./packages/when1.8.1/'), 1000, 'when-1.8.1', testType],
 
-  // [require('./packages/when2.0.1/'), 10, 'when-2.0.1'],
-  // [require('./packages/when2.0.1/'), 100, 'when-2.0.1'],
-  // [require('./packages/when2.0.1/'), 500, 'when-2.0.1'],
-  // [require('./packages/when2.0.1/'), 1000, 'when-2.0.1'],
+  // [require('./packages/when2.0.1/'), 10, 'when-2.0.1', testType],
+  // [require('./packages/when2.0.1/'), 100, 'when-2.0.1', testType],
+  // [require('./packages/when2.0.1/'), 500, 'when-2.0.1', testType],
+  // [require('./packages/when2.0.1/'), 1000, 'when-2.0.1', testType],
 
   // // The default when is from dev branch 2.1.x
-  // [when, 10, 'when-2.1.x'],
-  // [when, 100, 'when-2.1.x'],
-  [when, 500, 'when-2.1.x'],
-  // [when, 1000, 'when-2.1.x'],
+  // [when, 10, 'when-2.1.x', testType],
+  // [when, 100, 'when-2.1.x', testType],
+  // [when, 500, 'when-2.1.x', testType],
+  // [when, 1000, 'when-2.1.x', testType],
 
-  // [Q, 10, 'Q'],
-  // [Q, 100, 'Q'],
-  [Q, 500, 'Q'],
-  // [Q, 1000, 'Q'],
+  // [Q, 10, 'Q', testType],
+  // [Q, 100, 'Q', testType],
+  // [Q, 500, 'Q', testType],
+  // [Q, 1000, 'Q', testType],
 
-  // [deferred, 10, 'deferred-0.6.3', deferred],
-  // [deferred, 100, 'deferred-0.6.3', deferred],
-  [deferred, 500, 'deferred-0.6.3', deferred],
-  // [deferred, 1000, 'deferred-0.6.3', deferred]
+  // [deferred, 10, 'deferred-0.6.3', testType, deferred ],
+  // [deferred, 100, 'deferred-0.6.3', testType, deferred ],
+  // [deferred, 500, 'deferred-0.6.3', testType, deferred],
+  // [deferred, 1000, 'deferred-0.6.3', testType, deferred]
 
 
   // [rsvp, 10, 'rsvp']
