@@ -182,7 +182,7 @@ Q.longStackJumpLimit = 0;
 deferred.all = deferred.map;
 
 // Define the way stub funcs will resolve: SYNC, MIXED, ASYNC
-var testType = TestType.SYNC;
+var testType = TestType.ASYNC;
 
 var runs = [
   // [false, 10, 'async', testType],
