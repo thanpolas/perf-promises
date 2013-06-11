@@ -182,7 +182,7 @@ Q.longStackJumpLimit = 0;
 deferred.all = deferred.map;
 
 // Define the way stub funcs will resolve: SYNC, MIXED, ASYNC
-var testType = TestType.ASYNC;
+var testType = TestType.SYNC;
 
 var runs = [
   // [false, 10, 'async', testType],
@@ -203,17 +203,17 @@ var runs = [
   // // The default when is from dev branch 2.1.x
   // [when, 10, 'when-2.1.0', testType],
   // [when, 100, 'when-2.1.0', testType],
-  // [when, 500, 'when-2.1.0', testType],
+  [when, 500, 'when-2.1.0', testType],
   // [when, 1000, 'when-2.1.0', testType],
 
   // [Q, 10, 'Q-0.9.5', testType],
   // [Q, 100, 'Q-0.9.5', testType],
-  // [Q, 500, 'Q-0.9.5', testType],
+  [Q, 500, 'Q-0.9.5', testType],
   // [Q, 1000, 'Q-0.9.5', testType],
 
   // [deferred, 10, 'deferred-0.6.3', testType, deferred ],
   // [deferred, 100, 'deferred-0.6.3', testType, deferred ],
-  // [deferred, 500, 'deferred-0.6.3', testType, deferred],
+  [deferred, 500, 'deferred-0.6.3', testType, deferred],
   // [deferred, 1000, 'deferred-0.6.3', testType, deferred],
   //
   [Promise, 500, 'Promise-3.0.1', testType, Promise]
