@@ -220,7 +220,7 @@ var runs = [
 
 
   // [rsvp, 10, 'rsvp']
-  [rsvp, 500, 'rsvp', testType, rsvp.deferred]
+  [rsvp, 500, 'rsvp', testType]
 
   // memory single test runs of 500 loops
   // [false, 500, 'mem-async']
