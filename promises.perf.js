@@ -21,7 +21,7 @@ var fs = require('fs');
 
 var when   = require('when');
 var Q = require('q');
-// var rsvp = require('rsvp');
+var rsvp = require('rsvp');
 var deferred = require('deferred');
 var Promise = require('promise');
 
@@ -216,10 +216,11 @@ var runs = [
   [deferred, 500, 'deferred-0.6.3', testType, deferred],
   // [deferred, 1000, 'deferred-0.6.3', testType, deferred],
   //
-  [Promise, 500, 'Promise-3.0.1', testType, Promise]
+  [Promise, 500, 'Promise-3.0.1', testType, Promise],
 
 
   // [rsvp, 10, 'rsvp']
+  [rsvp, 500, 'rsvp', testType, rsvp.deferred]
 
   // memory single test runs of 500 loops
   // [false, 500, 'mem-async']
