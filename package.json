@@ -15,7 +15,8 @@
     "lodash": "~1.2.1",
     "q": "~0.9.5",
     "when": "~2.1.0",
-    "promise": "~3.0.1"
+    "promise": "~3.0.1",
+    "bluebird": "~2.3.0"
   },
   "devDependencies": {}
 }

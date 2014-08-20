@@ -24,9 +24,22 @@ var Q = require('q');
 var rsvp = require('rsvp');
 var deferred = require('deferred');
 var Promise = require('promise');
+var Bluebird = require('bluebird');
 
 
 var allResults = [];
+
+function bluebirdDeferred() {
+    var fakeDeferred;
+
+    fakeDeferred = {};
+    fakeDeferred.promise = new Bluebird(function (resolve, reject) {
+        fakeDeferred.resolve = resolve;
+        fakeDeferred.reject = reject;
+    });
+
+    return fakeDeferred;
+}
 
 function run(Prom, Defer, loops, promText, testType) {
   var def = when.defer();
@@ -220,7 +233,9 @@ var runs = [
 
 
   // [rsvp, 10, 'rsvp']
-  [rsvp, 500, 'rsvp', testType]
+  [rsvp, 500, 'rsvp', testType],
+
+  [Bluebird, 500, 'bluebird', testType, bluebirdDeferred]
 
   // memory single test runs of 500 loops
   // [false, 500, 'mem-async']
